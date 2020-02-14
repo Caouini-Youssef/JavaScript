@@ -1,30 +1,47 @@
-(function () {
-    $(document).ready(function () {
-        let css_black = {'display' : 'inline-block','background-color': 'black', 'color': 'white', 'min-width' : '75px', 'min-height' : '75px'};
-        let css_white = {'display' : 'inline-block','background-color': 'white', 'color': 'black', 'min-width' : '75px', 'min-height' : '75px'};
-        let css_blue = {'display' : 'inline-block','background-color': 'blue', 'color': 'black', 'min-width' : '75px', 'min-height' : '75px'};
-        for (let y = 0; y < 8; y++) {
-            let ligne = $('<div></div>');
-            $('#damier').append(ligne);
-            for (let x = 0; x < 8; x++) {
-                ligne.append($('<div></div>')
-                    .data('coord-x', x)
-                    .data('coord-y', y)
-                    .css((x + y) % 2 ? css_black : css_white)
-                    .append('&nbsp;')
-                    .mouseleave (function () {
-                        if (($(this).data('coord-x') + $(this).data('coord-y')) % 2) {
-                            $(this).css(css_black);
-                        }
-                        else
-                        {
-                            $(this).css( css_white);
-                        }
-                    })
-                    .mouseover(function() {
-                        $(this).css(css_blue)
-                    }))
-            }
-        }
+(function() {
+    'use strict';
+    $(() => {
+        $.ajax({
+            url: 'https://sokoban.doonoo.fr/',
+            method: 'get',
+            // data: ...
+        })
+            .done(function(data) {
+                for (let key in data) {
+                    $('body').append(
+                        $('<div />').append(
+                            $('<div />').html(data[key].description),
+                            $('<div />').html(data[key].copyright)
+                        ).css({
+                            'margin': '5px',
+                            'padding': '5px',
+                            'border': '1px solid purple',
+                        }).on('click', function(data) {
+                            let self = $(this);
+                            // ajax qui va chercher tous les niveaux de ce
+                            // groupe :
+                            $.ajax({
+                                url: 'https://sokoban.doonoo.fr/levels/' + key,
+                                method: 'get',
+                            }).done(function(data) {
+                                self.after(
+                                    $('<div />').html(data.title)
+                                )
+                                for (let level of data.levels) {
+                                    for (let cell of level.cells) {
+                                        self.after(
+                                            $('<pre />').html(cell)
+                                        )
+                                    }
+                                }
+                            })
+                        })
+                    )
+                }
+            })
+            .fail(function() {
+                /* erreur critique */
+            });
     });
-})();
+
+}) ();
