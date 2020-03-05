@@ -2,14 +2,14 @@
     'use strict';
     $(() => {
         $('#form-login').submit(function() {
-            $('#messages').html(data.message).fadeOut();
+            //$('#messages').html(data.message).fadeOut();
             $.ajax({
                 url: $(this).attr('action'),
                 method: $(this).attr('method'),
                 data: $(this).serialize()
             }).done(function(data) {
                 if (data.success == true) {
-                    window.location.href = '/';
+                    window.location.href = '/test.html';
                 }
                 else
                 {
