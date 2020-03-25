@@ -1,9 +1,34 @@
 (function () {
     'use strict';
     $(() => {
-        $('#deco').submit(function () {
+        $('#deconnexion').on("click",function () {
             
         });
+        $('#ingredients').on("click",function () {
+            
+        });
+        $('#cocktails').on("click",function () {
+            $.ajax({
+                url: "cocktails.php",
+                method: "GET",
+                data: {
+                    cocktails: "ALL",
+                }
+             })
+            .done(function (data) {
+                console.log(data);
+                if (data['success'] == false)
+                {
+                    alert("Erreur : " + data['message']);
+                }
+                for (let cocktail in data['cocktails'])
+                {
+                    let element = $('<div>'+cocktail.name+'</div>');
+                    $('body').append(element);
+                }
+            })
+        });
+
         $('#form-login').submit(function () {
             //$('#messages').html(data.message).fadeOut();
             $.ajax({
